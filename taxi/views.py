@@ -108,13 +108,15 @@ class DriverDeleteView(LoginRequiredMixin, generic.DeleteView):
 def assign_driver_to_car(request, pk):
     car = Car.objects.get(id=pk)
     driver = request.user
-    car.drivers.add(driver)
-    return redirect("taxi:car-detail", pk=pk)
+    if isinstance(driver, Driver):
+        car.drivers.add(driver)
+        return redirect("taxi:car-detail", pk=pk)
 
 
 @login_required()
 def delete_driver_from_car(request, pk):
     car = Car.objects.get(id=pk)
     driver = request.user
-    car.drivers.remove(driver)
-    return redirect("taxi:car-detail", pk=pk)
+    if isinstance(driver, Driver):
+        car.drivers.add(driver)
+        return redirect("taxi:car-detail", pk=pk)
